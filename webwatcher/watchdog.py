@@ -14,7 +14,6 @@ def on_created(event):
 
 
 def get_observer():
-    print('Registering directories to watch')
     observer = Observer()
     if IS_WINDOWS:
         print('WARNING: Using less performant observer because host is Windows.')
@@ -36,5 +35,7 @@ def schedule_observer(observer):
         if path.exists():
             print(f'Watching directory {path.resolve()}')
             observer.schedule(fs_handle, f'{path.resolve()}', recursive=True)
+        else:
+            print(f'Skipping watch directory `{path.resolve()}` because it does not exist')
     return observer
 

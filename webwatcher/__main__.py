@@ -2,7 +2,7 @@ import signal
 from time import sleep
 
 from .args import config, DRY_RUN
-from .utils import clean_files
+from .utils import clean_files, convert_files
 from .watchdog import schedule_observer, get_observer
 
 
@@ -19,7 +19,6 @@ def finish(signum, frame):
     exit(0)
 
 
-print('Registering signals')
 signal.signal(signal.SIGTERM, finish)
 signal.signal(signal.SIGINT, finish)
 
@@ -36,3 +35,5 @@ if config.subcommand is None or config.subcommand == 'watch':
 
 if config.subcommand == 'clean':
     clean_files()
+elif config.subcommand == 'convert':
+    convert_files()
