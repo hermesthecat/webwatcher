@@ -1,5 +1,4 @@
 FROM python:3.10-alpine
-WORKDIR /watch
 
 RUN apk add --update --no-cache ffmpeg imagemagick
 
@@ -10,6 +9,7 @@ ADD webwatcher /app/webwatcher
 
 VOLUME /watch
 VOLUME /source
+WORKDIR /watch
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH="/app"
