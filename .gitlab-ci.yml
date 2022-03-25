@@ -19,8 +19,13 @@ Build Image:
 
 Release:
   stage: deploy
-  image: registry.gitlab.com/gitlab-org/release-cli:v0.1.0
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    - gitlab-releaser create --name=$CI_COMMIT_TAG --description="$CI_COMMIT_TAG release."
+    - echo "running release"
+  release:
+    name: 'WebWatcher $CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG release of WebWatcher.'
+    tag_name: '$CI_COMMIT_TAG'
+    ref: '$CI_COMMIT_TAG'
