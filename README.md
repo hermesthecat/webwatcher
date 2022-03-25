@@ -84,3 +84,9 @@ Some CLI args are inverse of the environment variable, because the default behav
 [^2]: If you are running from docker and mounting a Windows volume, you must specify this for the container to be able to see filesystem changes.
 
 
+# Planned Changes
+- Upload to PyPi
+- Give CLI arguments priority over environment variables
+- More conversion options
+- Exclude sub-directories
+- 
