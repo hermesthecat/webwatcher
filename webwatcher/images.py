@@ -1,6 +1,5 @@
 import subprocess
 from pathlib import Path
-import shutil
 
 from .args import WEBP_QUALITY, IMAGE_DELETE, WEBP_COMMAND, DRY_RUN, SOURCE_PATH, KEEP_SOURCE
 
