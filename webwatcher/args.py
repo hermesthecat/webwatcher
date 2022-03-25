@@ -21,6 +21,7 @@ _parser = argparse.ArgumentParser(description='Convert media to smaller web form
 _parser.add_argument('--path', type=Path, dest='paths', action='append', metavar='directory', help='a patch to watch for files', default=list())
 _parser.add_argument('--source-path', type=Path, action='store', metavar='directory', help='directory to place source files (should be outside all watch directories)', default='/source')
 _parser.add_argument('--dry-run', action='store_true', help='Do not process any files but show output.')
+_parser.add_argument('--windows', action='store_true', help='Is running on Windows host.')
 _parser.add_argument('--no-keep-source', action='store_false', dest='keep_source', help='Do not keep source files.')
 
 # Define subcommands
@@ -57,7 +58,7 @@ _WATCH_DIRS = env.list('WATCH_DIRS', config.paths)
 if len(_WATCH_DIRS) == 0:
     _WATCH_DIRS.append(Path('/watch'))
 WATCH_DIRS = [Path(f) for f in _WATCH_DIRS]
-IS_WINDOWS = env.bool('IS_WINDOWS', False)
+IS_WINDOWS = env.bool('IS_WINDOWS', config.windows)
 DRY_RUN = env.bool('DRY_RUN', config.dry_run)
 KEEP_SOURCE = env.bool('KEEP_SOURCE', config.keep_source)
 SOURCE_PATH = env.path('SOURCE_PATH', config.source_path)

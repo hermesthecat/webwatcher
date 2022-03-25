@@ -4,7 +4,7 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers.polling import PollingObserver
 
-from .args import config, IS_WINDOWS
+from .args import config, IS_WINDOWS, IS_DOCKER
 from .utils import process_file
 
 
@@ -15,7 +15,7 @@ def on_created(event):
 
 def get_observer():
     observer = Observer()
-    if IS_WINDOWS:
+    if IS_WINDOWS and IS_DOCKER:
         print('WARNING: Using less performant observer because host is Windows.')
         observer = PollingObserver()
     return observer
