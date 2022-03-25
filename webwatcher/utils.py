@@ -59,7 +59,6 @@ def convert_files():
                 convert_audio(path, parent=watch_dir)
             if path.suffix in IMAGE_CONVERT_FORMATS:
                 convert_image(path, parent=watch_dir)
-                break
 
 
 
