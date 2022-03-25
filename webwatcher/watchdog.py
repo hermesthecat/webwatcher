@@ -4,7 +4,7 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers.polling import PollingObserver
 
-from .args import config, IS_WINDOWS, IS_DOCKER
+from .args import config, IS_WINDOWS, IS_DOCKER, WATCH_DIRS
 from .utils import process_file
 
 
@@ -30,7 +30,7 @@ def schedule_observer(observer):
     )
     fs_handle.on_created = on_created
 
-    for p in config.paths:
+    for p in WATCH_DIRS:
         path = Path(p)
         if path.exists():
             print(f'Watching directory {path.resolve()}')
