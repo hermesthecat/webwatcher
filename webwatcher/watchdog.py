@@ -1,21 +1,28 @@
+import os
 from pathlib import Path
+from time import sleep
 
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers.polling import PollingObserver
 
-from .args import config, IS_WINDOWS, IS_DOCKER, WATCH_DIRS
-from .utils import process_file
+from .MediaFile import MediaFile
+from .args import config, IS_DOCKER
 
 
 def on_created(event):
     print(f"CREATED: {event.src_path}")
-    process_file(Path(event.src_path))
+    size = -1
+    while size != os.path.getsize(event.src_path):
+        size = os.path.getsize(event.src_path)
+        sleep(1)
+    media = MediaFile(Path(event.src_path), parent=config.base_dir)
+    media.process_file()
 
 
 def get_observer():
     observer = Observer()
-    if IS_WINDOWS and IS_DOCKER:
+    if config.windows and IS_DOCKER:
         print('WARNING: Using less performant observer because host is Windows.')
         observer = PollingObserver()
     return observer
@@ -30,7 +37,7 @@ def schedule_observer(observer):
     )
     fs_handle.on_created = on_created
 
-    for p in WATCH_DIRS:
+    for p in config.watch_dirs:
         path = Path(p)
         if path.exists():
             print(f'Watching directory {path.resolve()}')
