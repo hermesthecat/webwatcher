@@ -1,22 +1,24 @@
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 import ffmpeg
 
-from webwatcher.args import config
+from webwatcher.args import config, IS_DOCKER
 
 
 class MediaFile:
 
     def __init__(self, path: Path, parent: Path = None):
         self.path = path
-        self.parent = parent
+        self.parent = parent if parent else path.parent
         self.is_media = False
         self.converted = False
         self.delete = config.delete_media
         self.keep = not self.delete
         self.dest = path
         self.source = config.source_dir / self.path.relative_to(parent)
+
         self.failed = False
 
         if self.path.suffix in config.audio_convert_formats:
@@ -29,6 +31,9 @@ class MediaFile:
             self.is_media = True
             self.is_image = True
             self.keep = not config.keep_images
+
+        if not IS_DOCKER:
+            self.source = config.source_dir / self.path.relative_to(self.path.anchor)
 
     def copy_to_source(self, override=False, move=False):
         """

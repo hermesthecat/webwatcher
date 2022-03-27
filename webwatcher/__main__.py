@@ -42,6 +42,7 @@ if config.subcommand is None or config.subcommand == 'watch':
     # Run indefinitely so watchdog can do its thing
     while True:
         sleep(1)
+        exit(0)
 
 elif config.subcommand == 'clean':
     print('Cleaning existing files')

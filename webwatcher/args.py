@@ -28,8 +28,8 @@ def file_extension(arg):
 
 
 _WATCH_DIRS = env.list('WATCH_DIRS', list())
-#if len(_WATCH_DIRS) == 0:
-#    _WATCH_DIRS.append(Path('/watch'))
+if len(_WATCH_DIRS) == 0:
+    _WATCH_DIRS.append('/watch')
 WATCH_DIRS = [Path(f) for f in _WATCH_DIRS]
 DRY_RUN = env.bool('DRY_RUN', False)
 COPY_SOURCE = env.bool('COPY_SOURCE', True)
@@ -62,10 +62,8 @@ p_manage = subparsers.add_parser('clean', help='Cleans up old files that may or 
 p_manage = subparsers.add_parser('convert', help='Runs a one time conversion of all matching files in the specified directories.')
 
 
-
-
 # General args
-# TODO: use /watch if nothing provided at all, figure out how to decided to exlucde base path
+# TODO: use /watch if nothing provided at all, figure out how to decided to exclude base path
 _parser.add_argument('--path', type=Path, dest='watch_dirs', action='append', metavar='directory', help='a patch to watch for files', default=_WATCH_DIRS)
 _parser.add_argument('--dry-run', action='store_true', help='Do not process any files but show output.', default=DRY_RUN)
 _parser.add_argument('--no-copy-source', action='store_false', dest='copy_source', help='Do not copy source files to source folder.', default=COPY_SOURCE)
@@ -81,7 +79,7 @@ _parser.add_argument('--force', action='store_true', help='Deletes matching medi
 a_group = _parser.add_argument_group('Audio')
 a_group.add_argument('--no-watch-audio', action='store_false', dest='watch_audio', help='Do not watch for audio files', default=WATCH_AUDIO)
 a_group.add_argument('--no-delete-audio', action='store_true', dest='keep_audio', help='Do not delete audio (used with --delete-media)', default=DELETE_AUDIO)
-a_group.add_argument('--audio-format', type=file_extension, action='append', dest='audio_convert_formats', metavar='extension', help='Extra audio formats to watch for', default=_AUDIO_CONVERT_FORMATS)  # TODO
+a_group.add_argument('--audio-format', type=file_extension, action='append', dest='audio_convert_formats', metavar='extension', help='Extra audio formats to watch for', default=_AUDIO_CONVERT_FORMATS)
 
 
 # Image args
@@ -93,6 +91,9 @@ i_group.add_argument('--webp-command', type=str, nargs='?', metavar='executable_
 i_group.add_argument('--webp-quality', type=quality, action='store', metavar='percent', help='conversion quality for libwebp: 1 (worst) to 100 (lossless)', default=WEBP_QUALITY)
 i_group.add_argument('--webp-lossless', action='store_true', help='Use lossless conversion when converting to webp', default=WEBP_LOSSLESS)
 
+#print(_parser.parse_args().watch_dirs)
+#print(_parser.parse_args().base_dir)
+#exit(0)
 config = _parser.parse_args()
 
 
