@@ -1,7 +1,9 @@
+import os
 import shutil
+import signal
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, WindowsPath
 import ffmpeg
 
 from webwatcher.args import config, IS_DOCKER
@@ -11,15 +13,28 @@ class MediaFile:
 
     def __init__(self, path: Path, parent: Path = None):
         self.path = path
-        self.parent = parent if parent else path.parent
+        self.parent = parent if parent else path
         self.is_media = False
         self.converted = False
         self.delete = config.delete_media
         self.keep = not self.delete
         self.dest = path
-        self.source = config.source_dir / self.path.relative_to(parent)
-
         self.failed = False
+
+        # Set parent based on watch_dir
+        for i, p in enumerate(self.path.parents):
+            if p in config.watch_dirs:
+                self.parent = p
+                break
+
+        # If only watch directory is /watch
+        if len(config.watch_dirs) == 1 and config.watch_dirs[0] == '/watch':
+            # Make source relative to watch directory
+            self.source = config.source_dir / self.path.relative_to(self.parent.resolve())
+        else:
+            # Make source location relative to drive (to avoid duplicate paths)
+            self.source = config.source_dir / self.path.relative_to(self.path.parents[-1].resolve())
+
 
         if self.path.suffix in config.audio_convert_formats:
             self.dest = self.dest.with_suffix('.webm')
@@ -41,8 +56,6 @@ class MediaFile:
         :param override: boolean
         :param move: Move file instead of copying
         """
-        print(config.copy_source)
-
         if config.copy_source and not override:
             # Create source destination if not exists
             if not config.dry_run:
@@ -50,7 +63,7 @@ class MediaFile:
 
             # Only copy if file doesn't exist already
             if not self.source.exists():
-                print(f'COPYING: {self.source}')
+                print(f'COPY:\t{self.source}')
                 # Copy source to new folder
                 if not config.dry_run:
                     if move:
@@ -74,7 +87,7 @@ class MediaFile:
 
     def delete_file(self):
         # If the file was a supported extension
-        print(f'DELETING: {self.path.resolve()}')
+        print(f'DELETE:\t{self.path.resolve()}')
         if not config.dry_run:
             self.path.unlink(missing_ok=True)
 
@@ -108,7 +121,7 @@ class MediaFile:
                 '-quality', '100',
                 f'"{self.dest.relative_to(self.parent).resolve()}"'
             ]
-            print(' '.join(['AUDIO:', *short_args]))
+            print(' '.join(['AUDIO: ', *short_args]))
             if not config.dry_run:
                 try:
                     (ffmpeg
@@ -145,7 +158,7 @@ class MediaFile:
                 '-quality', config.webp_quality,
                 f'"{self.dest.relative_to(self.parent).resolve()}"'
             ]
-            print(' '.join(['IMAGE:', *short_args]))
+            print(' '.join(['IMAGE: ', *short_args]))
             if not config.dry_run:
                 p = subprocess.run(args)
                 code = p.returncode

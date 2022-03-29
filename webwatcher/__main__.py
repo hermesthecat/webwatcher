@@ -37,8 +37,9 @@ if config.subcommand is None or config.subcommand == 'watch':
     pool = ThreadPool(config.workers)
 
     # Run new thread pool from all existing files
+    print('Running conversion on existing files.')
     results = pool.map(convert_existing_file, get_all_files())
-
+    print('Finished processing existing files.')
     # Run indefinitely so watchdog can do its thing
     while True:
         sleep(1)

@@ -9,6 +9,18 @@ IS_WINDOWS = env.bool('IS_WINDOWS', False)
 _parser = argparse.ArgumentParser(description='Convert media to smaller web formats.', prog='webwatcher')
 
 
+class AppendOrOverwrite(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = getattr(namespace, self.dest, None)
+        items = argparse._copy_items(items)
+        items.append(values)
+
+        # Remove `/watch` if user specified their own watch directory(s)
+        if len(items) > 1 and '/watch' in items:
+            items.remove('/watch')
+        setattr(namespace, self.dest, items)
+
+
 def quality(arg):
     """ Type function for argparse - a float within some predefined bounds """
     try:
@@ -63,8 +75,7 @@ p_manage = subparsers.add_parser('convert', help='Runs a one time conversion of 
 
 
 # General args
-# TODO: use /watch if nothing provided at all, figure out how to decided to exclude base path
-_parser.add_argument('--path', type=Path, dest='watch_dirs', action='append', metavar='directory', help='a patch to watch for files', default=_WATCH_DIRS)
+_parser.add_argument('--path', type=Path, dest='watch_dirs', action=AppendOrOverwrite, metavar='directory', help='a patch to watch for files', default=_WATCH_DIRS)
 _parser.add_argument('--dry-run', action='store_true', help='Do not process any files but show output.', default=DRY_RUN)
 _parser.add_argument('--no-copy-source', action='store_false', dest='copy_source', help='Do not copy source files to source folder.', default=COPY_SOURCE)
 _parser.add_argument('--windows', action='store_true', help='Is running on Windows host. (only required when running from Docker)', default=IS_WINDOWS)
@@ -91,9 +102,6 @@ i_group.add_argument('--webp-command', type=str, nargs='?', metavar='executable_
 i_group.add_argument('--webp-quality', type=quality, action='store', metavar='percent', help='conversion quality for libwebp: 1 (worst) to 100 (lossless)', default=WEBP_QUALITY)
 i_group.add_argument('--webp-lossless', action='store_true', help='Use lossless conversion when converting to webp', default=WEBP_LOSSLESS)
 
-#print(_parser.parse_args().watch_dirs)
-#print(_parser.parse_args().base_dir)
-#exit(0)
 config = _parser.parse_args()
 
 

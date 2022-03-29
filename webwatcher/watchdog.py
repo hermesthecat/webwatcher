@@ -16,7 +16,7 @@ def on_created(event):
     while size != os.path.getsize(event.src_path):
         size = os.path.getsize(event.src_path)
         sleep(1)
-    media = MediaFile(Path(event.src_path), parent=config.base_dir)
+    media = MediaFile(Path(event.src_path))
     media.process_file()
 
 
