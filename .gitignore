@@ -5,3 +5,8 @@ venv
 *.pyc
 **/__pycache__
 source
+dist
+*mp3
+*png
+#webwatcher.egg-info
+*.egg-info
