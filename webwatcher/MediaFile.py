@@ -7,6 +7,7 @@ from pathlib import Path, WindowsPath
 import ffmpeg
 
 from webwatcher.args import config, IS_DOCKER
+from webwatcher.logging import logger
 
 
 class MediaFile:
@@ -63,7 +64,7 @@ class MediaFile:
 
             # Only copy if file doesn't exist already
             if not self.source.exists():
-                print(f'COPY:\t{self.source}')
+                logger.info(f'COPY:\t{self.source}')
                 # Copy source to new folder
                 if not config.dry_run:
                     if move:
@@ -87,7 +88,7 @@ class MediaFile:
 
     def delete_file(self):
         # If the file was a supported extension
-        print(f'DELETE:\t{self.path.resolve()}')
+        logger.info(f'DELETE:\t{self.path.resolve()}')
         if not config.dry_run:
             self.path.unlink(missing_ok=True)
 
@@ -121,7 +122,7 @@ class MediaFile:
                 '-quality', '100',
                 f'"{self.dest.relative_to(self.parent).resolve()}"'
             ]
-            print(' '.join(['AUDIO: ', *short_args]))
+            logger.info(' '.join(['AUDIO: ', *short_args]))
             if not config.dry_run:
                 try:
                     (ffmpeg
@@ -132,7 +133,7 @@ class MediaFile:
                     self.converted = True
                     return True
                 except ffmpeg.Error as e:
-                    print(f'ffmpeg encountered an error converting audio file {self.path.resolve()}')
+                    logger.info(f'ffmpeg encountered an error converting audio file {self.path.resolve()}')
                     self.failed = True
                     return False
             return True
@@ -158,7 +159,7 @@ class MediaFile:
                 '-quality', config.webp_quality,
                 f'"{self.dest.relative_to(self.parent).resolve()}"'
             ]
-            print(' '.join(['IMAGE: ', *short_args]))
+            logger.info(' '.join(['IMAGE: ', *short_args]))
             if not config.dry_run:
                 p = subprocess.run(args)
                 code = p.returncode

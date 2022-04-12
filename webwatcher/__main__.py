@@ -2,6 +2,7 @@ import signal
 from time import sleep
 
 from .args import config
+from .logging import logger
 from .utils import clean_existing_files, \
     convert_existing_files, get_all_files, convert_existing_file, get_exclude_dirs
 from .watchdog import schedule_observer, get_observer
@@ -11,12 +12,12 @@ observer = get_observer()
 
 
 def finish(signum, frame):
-    print('\nExiting application...')
+    logger.info('\nExiting application...')
     try:
         observer.stop()
         observer.join()
     except:
-        print('Error stopping observer.')
+        logger.info('Error stopping observer.')
     exit(0)
 
 
@@ -24,15 +25,15 @@ signal.signal(signal.SIGTERM, finish)
 signal.signal(signal.SIGINT, finish)
 
 if config.dry_run:
-    print('Dry run enabled.  Will not perform any file operations but will still print output of what would be happening.')
+    logger.info('Dry run enabled.  Will not perform any file operations but will still logger.info output of what would be happening.')
 
 for p in get_exclude_dirs():
-    print(f'Excluding directory: {p}')
+    logger.info(f'Excluding directory: {p}')
 
 
 # Only start watcher if no subcommand is specified or watch command is specified
 if config.subcommand is None or config.subcommand == 'watch':
-    print('Starting watcher')
+    logger.info('Starting watcher')
     observer = schedule_observer(observer)
     observer.start()
 
@@ -40,17 +41,17 @@ if config.subcommand is None or config.subcommand == 'watch':
     pool = ThreadPool(config.workers)
 
     # Run new thread pool from all existing files
-    print('Running conversion on existing files.')
+    logger.info('Running conversion on existing files.')
     results = pool.map(convert_existing_file, get_all_files())
-    print('Finished processing existing files.')
+    logger.info('Finished processing existing files.')
     # Run indefinitely so watchdog can do its thing
     while True:
         sleep(1)
 
 elif config.subcommand == 'clean':
-    print('Cleaning existing files')
+    logger.info('Cleaning existing files')
     clean_existing_files(get_all_files())
 
 elif config.subcommand == 'convert':
-    print('Converting existing files')
+    logger.info('Converting existing files')
     convert_existing_files(get_all_files())

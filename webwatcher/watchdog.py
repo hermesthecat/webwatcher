@@ -8,11 +8,12 @@ from watchdog.observers.polling import PollingObserver
 
 from .MediaFile import MediaFile
 from .args import config, IS_DOCKER
+from .logging import logger
 from .utils import get_exclude_dirs
 
 
 def on_created(event):
-    print(f"CREATED: {event.src_path}")
+    logger.info(f"CREATED: {event.src_path}")
     size = -1
     while size != os.path.getsize(event.src_path):
         size = os.path.getsize(event.src_path)
@@ -24,7 +25,7 @@ def on_created(event):
 def get_observer():
     observer = Observer()
     if config.windows and IS_DOCKER:
-        print('WARNING: Using less performant observer because host is Windows.')
+        logger.info('WARNING: Using less performant observer because host is Windows.')
         observer = PollingObserver()
     return observer
 
@@ -41,9 +42,9 @@ def schedule_observer(observer):
     for p in config.watch_dirs:
         path = Path(p)
         if path.exists():
-            print(f'Watching directory {path.resolve()}')
+            logger.info(f'Watching directory {path.resolve()}')
             observer.schedule(fs_handle, f'{path.resolve()}', recursive=True)
         else:
-            print(f'Skipping watch directory `{path.resolve()}` because it does not exist')
+            logger.info(f'Skipping watch directory `{path.resolve()}` because it does not exist')
     return observer
 
