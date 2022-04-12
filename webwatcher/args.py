@@ -43,6 +43,10 @@ _WATCH_DIRS = env.list('WATCH_DIRS', list())
 if len(_WATCH_DIRS) == 0:
     _WATCH_DIRS.append('/watch')
 WATCH_DIRS = [Path(f) for f in _WATCH_DIRS]
+
+_EXCLUDE_DIRS = env.list('EXCLUDE_DIRS', list())
+EXCLUDE_DIRS = [Path(f) for f in _EXCLUDE_DIRS]
+
 DRY_RUN = env.bool('DRY_RUN', False)
 COPY_SOURCE = env.bool('COPY_SOURCE', True)
 SOURCE_DIR = env.path('SOURCE_DIR', '/source')
@@ -75,14 +79,15 @@ p_manage = subparsers.add_parser('convert', help='Runs a one time conversion of 
 
 
 # General args
-_parser.add_argument('--path', type=Path, dest='watch_dirs', action=AppendOrOverwrite, metavar='directory', help='a patch to watch for files', default=_WATCH_DIRS)
-_parser.add_argument('--dry-run', action='store_true', help='Do not process any files but show output.', default=DRY_RUN)
+_parser.add_argument('-p', '--path', type=Path, dest='watch_dirs', action=AppendOrOverwrite, metavar='directory', help='a patch to watch for files', default=_WATCH_DIRS)
+_parser.add_argument('-d', '--dry-run', action='store_true', help='Do not process any files but show output.', default=DRY_RUN)
 _parser.add_argument('--no-copy-source', action='store_false', dest='copy_source', help='Do not copy source files to source folder.', default=COPY_SOURCE)
 _parser.add_argument('--windows', action='store_true', help='Is running on Windows host. (only required when running from Docker)', default=IS_WINDOWS)
 _parser.add_argument('--delete-media', action='store_true', help='Delete media files when done with them.', default=DELETE_MEDIA)
-_parser.add_argument('--source-dir', type=Path, action='store', metavar='directory', help='directory to place source files (should be outside all watch directories)', default=SOURCE_DIR)
-_parser.add_argument('--base-dir', type=Path, action='store', metavar='directory', help='sets base watch directory (debug only)', default=BASE_DIR)
-_parser.add_argument('--workers', type=int, action='store', metavar='int', help='max number of worker threads to use for simultaneous processing.', default=WORKERS)
+_parser.add_argument('-s', '--source-dir', type=Path, action='store', metavar='directory', help='directory to place source files (should be outside all watch directories)', default=SOURCE_DIR)
+_parser.add_argument('-b', '--base-dir', type=Path, action='store', metavar='directory', help='sets base watch directory (debug only)', default=BASE_DIR)
+_parser.add_argument('-e', '--exclude', type=Path, dest='exclude_dirs', action=AppendOrOverwrite, metavar='directory', help='Paths to exclude from processing', default=EXCLUDE_DIRS)
+_parser.add_argument('-w', '--workers', type=int, action='store', metavar='int', help='max number of worker threads to use for simultaneous processing.', default=WORKERS)
 _parser.add_argument('--all', action='store_true', help='Deletes ALL files, even if it isn\'t a media file (excluding webm/webp files)')
 _parser.add_argument('--force', action='store_true', help='Deletes matching media files, even if the converted webm/webp is not found.')
 

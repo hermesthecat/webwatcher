@@ -3,7 +3,7 @@ from time import sleep
 
 from .args import config
 from .utils import clean_existing_files, \
-    convert_existing_files, get_all_files, convert_existing_file
+    convert_existing_files, get_all_files, convert_existing_file, get_exclude_dirs
 from .watchdog import schedule_observer, get_observer
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -25,6 +25,9 @@ signal.signal(signal.SIGINT, finish)
 
 if config.dry_run:
     print('Dry run enabled.  Will not perform any file operations but will still print output of what would be happening.')
+
+for p in get_exclude_dirs():
+    print(f'Excluding directory: {p}')
 
 
 # Only start watcher if no subcommand is specified or watch command is specified

@@ -8,6 +8,7 @@ from watchdog.observers.polling import PollingObserver
 
 from .MediaFile import MediaFile
 from .args import config, IS_DOCKER
+from .utils import get_exclude_dirs
 
 
 def on_created(event):
@@ -31,7 +32,7 @@ def get_observer():
 def schedule_observer(observer):
     fs_handle = PatternMatchingEventHandler(
         patterns=['*'],
-        ignore_patterns=None,
+        ignore_patterns=get_exclude_dirs(),
         ignore_directories=False,
         case_sensitive=True
     )

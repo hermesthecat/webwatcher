@@ -5,6 +5,17 @@ from webwatcher.MediaFile import MediaFile
 from webwatcher.args import config
 
 
+def get_exclude_dirs():
+    exclude = list()
+    for path in config.exclude_dirs:
+        if path.is_absolute():
+            exclude.append(path)
+        else:
+            # Return list of dirs with watch_dir appended
+            exclude.extend([watch / path for watch in config.watch_dirs])
+    return exclude
+
+
 def get_all_files():
     # Get all files from all watched dirs
     all_files = []
@@ -24,8 +35,10 @@ def convert_existing_files(file_pairs):
 
 def convert_existing_file(file_pair):
     path, parent = file_pair
-    media = MediaFile(path, parent=parent)
-    media.process_file()
+    exclude = any(path.match(p) for p in ['test/*'])
+    if not exclude:
+        media = MediaFile(path, parent=parent)
+        media.process_file()
 
 
 def clean_existing_files(file_pairs):
