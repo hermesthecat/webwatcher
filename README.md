@@ -12,7 +12,8 @@ Configurable to do things like keep source files, lossless compression, and qual
 
 ### Python
 ```shell
-python -m webwatcher --path <dir> [--path <other_dir>] [--source-path <dir>] [...args] [command]
+python -m webwatcher --path <dir> [--path <other_dir>] [--source-dir <dir>] [...args] [command]
+# If you want to copy source file to keep, you should specify a source-path
 ```
 
 ### Docker
@@ -21,7 +22,7 @@ python -m webwatcher --path <dir> [--path <other_dir>] [--source-path <dir>] [..
 docker run --name webwatcher --rm -D -v /path/to/media/dir:/watch/media -v /path/to/more/media/dir:/watch/extra -v /path/to/storage:/source webwatcher:latest
 ```
 
-Simply, you run the container, mounting any number of directories under `/watch`, and, if you wish to keep the original files, a folder under `/source`
+Simply, you run the container, mounting any number of directories under `/watch`, and, if you wish to keep the original files, a folder under `/source`.  Other options can be added either via environment variables using the `-e` flag, or by passing a custom `cmd` to the docker container.
 
 ### Docker Compose
 ```yaml
@@ -66,7 +67,7 @@ Some CLI args are inverse of the environment variable, because the default behav
 | CLI Argument            | Env Variable    | Description                                                                          | Default                  |
 |:------------------------|:----------------|:-------------------------------------------------------------------------------------|:-------------------------|
 | `--path <dir>`          | `WATCH_DIRS`    | Path(s) to watch for.  You can use `--path` multiple times.                          | `/watch`                 |
-| `--source-path <path>`  | `SOURCE_PATH`   | Where to store original files                                                        | `/source` or `C:\source` |
+| `--source-dir <path>`   | `SOURCE_PATH`   | Where to store original files                                                        | `/source` or `C:\source` |
 | `--dry-run`             | `DRY_RUN`       | Print output but perform no file/conversion operations                               | `False`                  |
 | `--no-copy-source`      | `COPY_SOURCE`   | Moves source file to folder after converting                                         | `True`                   |
 | `--no-watch-audio`      | `WATCH_AUDIO`   | Watch for new audio files                                                            | `True`                   |
@@ -92,4 +93,4 @@ Some CLI args are inverse of the environment variable, because the default behav
 # Planned Changes
 - Upload to PyPi
 - More conversion options
-- Exclude sub-directories
+

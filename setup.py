@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='webwatcher',
     packages=['webwatcher'],
-    version='1.0',
+    version='0.1',
     license='MIT',
     description='Convert media files to a modern smaller equivalent.',
     author='cclloyd',
@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'environs',
         'watchdog',
+        'ffmpeg-python',
     ],
     python_requires='>=3.8',
     classifiers=[
