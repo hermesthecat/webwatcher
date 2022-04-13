@@ -10,3 +10,4 @@ dist
 *png
 #webwatcher.egg-info
 *.egg-info
+build
