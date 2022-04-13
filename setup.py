@@ -9,7 +9,7 @@ def read_file(filename):
 
 
 try:
-    description = pypandoc.convert('README.md', 'rst')
+    description = pypandoc.convert_file('README.md', 'rst')
 except (IOError, ImportError):
     description = open('README.md').read()
 
