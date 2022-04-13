@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='webwatcher',
     packages=['webwatcher'],
-    version='1.2',
+    version='CI_COMMIT_TAG',
     license='MIT',
     description='Convert media files to a modern smaller equivalent.',
     author='cclloyd',
