@@ -55,6 +55,8 @@ Upload to PyPi:
     - pip install twine
     - sed -i "s/CI_COMMIT_TAG/${CI_COMMIT_TAG}/g" setup.py
     - python setup.py sdist
-    - TWINE_PASSWORD=$PYPI_PASSWORD TWINE_USERNAME=$PYPI_USERNAME python -m twine upload dist/* --verbose
+    - echo $PYPI_USERNAME
+    - echo $PYPI_PASSWORD
+    - python -m twine upload dist/* --verbose -u $PYPI_USERNAME -p $PYPI_PASSWORD
 
 
