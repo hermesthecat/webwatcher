@@ -29,7 +29,7 @@ Simply, you run the container, mounting any number of directories under `/watch`
 ---
 version: "2.1"
 services:
-  radarr:
+  webwatcher:
     image: registry.gitlab.com/cclloyd1/webwatcher:latest
     container_name: webwatcher
     environment:

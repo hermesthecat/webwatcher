@@ -1,0 +1,13 @@
+---
+version: "2.1"
+services:
+  webwatcher:
+    image: registry.gitlab.com/cclloyd1/webwatcher:latest
+    container_name: webwatcher
+    environment:
+      - IS_WINDOWS=true # Only required if running on a Windows host
+    volumes:
+      - C:\Path\To\Media\Files:/watch/media
+      - C:\Path\To\Other\Media\Files:/watch/other
+      - C:\Path\To\Storage\For\Originals:/source
+    restart: unless-stopped
