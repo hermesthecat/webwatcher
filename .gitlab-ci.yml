@@ -34,16 +34,16 @@ stages:
 #    ref: '$CI_COMMIT_TAG'
 
 
-Upload to Gitlab Packages:
-  stage: deploy
-  image: python:3.10
-  rules:
-    - if: $CI_COMMIT_TAG
-  script:
-    - pip install twine
-    - sed -i "s/CI_COMMIT_TAG/${CI_COMMIT_TAG}/g" setup.py
-    - python setup.py sdist
-    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+#Upload to Gitlab Packages:
+#  stage: deploy
+#  image: python:3.10
+#  rules:
+#    - if: $CI_COMMIT_TAG
+#  script:
+#    - pip install twine
+#    - sed -i "s/CI_COMMIT_TAG/${CI_COMMIT_TAG}/g" setup.py
+#    - python setup.py sdist
+#    - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
 
 
 Upload to PyPi:
@@ -55,6 +55,6 @@ Upload to PyPi:
     - pip install twine
     - sed -i "s/CI_COMMIT_TAG/${CI_COMMIT_TAG}/g" setup.py
     - python setup.py sdist
-    - TWINE_PASSWORD=$PYPI_PASSWORD TWINE_USERNAME=$PYPI_USERNAME python -m twine upload dist/* -v
+    - TWINE_PASSWORD=$PYPI_PASSWORD TWINE_USERNAME=$PYPI_USERNAME python -m twine upload dist/* --verbose
 
 
