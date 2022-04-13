@@ -13,6 +13,8 @@ setup(
     version='CI_COMMIT_TAG',
     license='MIT',
     description='Convert media files to a modern smaller equivalent.',
+    long_description=read_file('README.md'),
+    long_description_content_type='text/markdown',
     author='cclloyd',
     author_email='cclloyd@cclloyd.com',
     url='https://gitlab.com/cclloyd1',
