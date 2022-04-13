@@ -5,7 +5,7 @@ RUN apk add --update --no-cache ffmpeg imagemagick
 ADD requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-ADD webwatcher /app/webwatcher
+ADD src/webwatcher /app/webwatcher
 
 VOLUME /watch
 VOLUME /source
