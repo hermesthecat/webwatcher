@@ -20,7 +20,7 @@ setup(
     version='CI_COMMIT_TAG',
     license='MIT',
     description='Convert media files to a modern smaller equivalent.',
-    long_description=description,
+    long_description='For more information on how to use, visit the repo at https://gitlab.com/cclloyd1/webwatcher',
     #long_description_content_type='text/markdown',
     author='cclloyd',
     author_email='cclloyd@cclloyd.com',
