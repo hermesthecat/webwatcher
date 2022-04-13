@@ -12,7 +12,7 @@ observer = get_observer()
 
 
 def finish(signum, frame):
-    logger.info('\nExiting application...')
+    logger.info('Exiting application...')
     try:
         observer.stop()
         observer.join()
