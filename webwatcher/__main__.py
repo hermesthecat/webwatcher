@@ -1,4 +1,5 @@
 import signal
+from pathlib import Path
 from time import sleep
 
 from .args import config
@@ -26,6 +27,15 @@ signal.signal(signal.SIGINT, finish)
 
 if config.dry_run:
     logger.info('Dry run enabled.  Will not perform any file operations but will still logger.info output of what would be happening.')
+
+if config.copy_source:
+    if not config.source_dir.exists():
+        test: Path = config.source_dir
+        try:
+            if not config.dry_run:
+                config.source_dir.mkdir(parents=True, exist_ok=True)
+        except PermissionError:
+            logger.error('Unable to create source directory.  Will not transfer source files.')
 
 for p in get_exclude_dirs():
     logger.info(f'Excluding directory: {p}')

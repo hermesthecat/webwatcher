@@ -99,8 +99,12 @@ class MediaFile:
         if self.is_media:
             if self.dest.exists() or config.force:
                 if copy:
-                    self.copy_to_source(move=True)
-                self.delete_file()
+                    try:
+                        self.copy_to_source(move=True)
+                        self.delete_file()
+                    except PermissionError:
+                        logger.warn('Unable to copy source file.')
+
         elif config.all:
             if self.path.suffix not in ['.webm', '.webp']:
                 if copy:
