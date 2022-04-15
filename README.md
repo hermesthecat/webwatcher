@@ -73,12 +73,14 @@ Some CLI args are inverse of the environment variable, because the default behav
 | `--no-watch-audio`      | `WATCH_AUDIO`   | Watch for new audio files                                                                      | `True`                        |
 | n/a                     | `DELETE_AUDIO`  | Delete audio files from watch dir once converted                                               | `True`                        |
 | `--no-delete-audio`     | n/a             | Inverse of `DELETE_AUDIO`(after copying source)                                                | `False`                       |
-| `--audio-format <str>`  | n/a             | Specify another extension to watch for as an audio file.  Can use multiple times.              | -                             |
+| `--audio-format <str>`  |                 | Specify another extension to watch for as an audio file.  Can use multiple times.              | -                             |
+|                         | `AUDIO_FORMATS` | Comma separated list of extra audio extensions to watch for.                                   | `[]`                          |
 | `--audio-bitrate <str>` | `AUDIO_BITRATE` | Target bitrate for audio conversion. If not specified, uses libopus quality filter set to 100. | libopus quality setting `100` |
 | `--no-watch-images`     | `WATCH_IMAGES`  | Watch for new image files                                                                      | `True`                        |
 |                         | `DELETE_IMAGES` | Delete image files from watch dir once converted (after copying source)                        | `True`                        |
 | `--no-delete-image`     | n/a             | Inverse of `DELETE_IMAGES`                                                                     | `False`                       |
-| `--image-format <str>`  | n/a             | Specify another extension to watch for as an image file.  Can use multiple times.              | -                             |
+| `--image-format <str>`  |                 | Specify another extension to watch for as an image file.  Can use multiple times.              | -                             |
+|                         | `IMAGE_FORMATS` | Comma separated list of extra image extensions to watch for.                                   | `[]`                          |
 | `--webp-command <path>` | `WEBP_COMMAND`  | Set the executable path of ImageMagick, when running as a module[^1]                           | `convert`                     |
 | `--webp-quality <int>`  | `WEBP_QUALITY`  | Quality when converting to webp.  0 - 100 (lossless).                                          | `60`                          |
 | `--webp-lossless`       | `WEBP_LOSSLESS` | Losslessly convert to webp (average 20% size reduction)                                        | `False`                       |

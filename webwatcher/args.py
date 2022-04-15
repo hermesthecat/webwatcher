@@ -36,8 +36,8 @@ def file_extension(arg):
     """ Type function for argparse - a float within some predefined bounds """
     if str(arg).startswith('.'):
         return str(arg)
-    raise argparse.ArgumentTypeError('Argument must be a file extension starting with \'.\'')
-
+    else:
+        return f'.{arg}'
 
 _WATCH_DIRS = env.list('WATCH_DIRS', list())
 if len(_WATCH_DIRS) == 0:
@@ -57,13 +57,17 @@ DELETE_MEDIA = env.bool('DELETE_MEDIA', True)
 # Audio
 WATCH_AUDIO = env.bool('WATCH_AUDIO', True)
 DELETE_AUDIO = env.bool('DELETE_AUDIO', True)
-_AUDIO_CONVERT_FORMATS = ['.mp3', '.aac', '.flac', '.wav', '.wma', '.aac', '.m4a', '.ogg']
+_DEFAULT_AUDIO_FORMATS = ['.mp3', '.aac', '.flac', '.wav', '.wma', '.aac', '.m4a', '.ogg']
+AUDIO_CONVERT_FORMATS = env.list('AUDIO_CONVERT_FORMATS', list())
+AUDIO_CONVERT_FORMATS = [*AUDIO_CONVERT_FORMATS, *_DEFAULT_AUDIO_FORMATS]
 AUDIO_BITRATE = env.str('AUDIO_BITRATE', None)
 
 # Image conversion settings
 WATCH_IMAGES = env.bool('WATCH_IMAGES', True)
 DELETE_IMAGES = env.bool('DELETE_IMAGES', True)
-_IMAGE_CONVERT_FORMATS = ['.png', '.jpg', '.bmp', '.jpeg']
+_DEFAULT_IMAGE_FORMATS = ['.png', '.bmp', '.jpg', '.jpeg']
+IMAGE_CONVERT_FORMATS = env.list('IMAGE_CONVERT_FORMATS', list())
+IMAGE_CONVERT_FORMATS = [*IMAGE_CONVERT_FORMATS, *_DEFAULT_IMAGE_FORMATS]
 WEBP_COMMAND = env.str('WEBP_COMMAND', 'magick' if os.name == 'nt' else 'convert')
 WEBP_LOSSLESS = env.bool('WEBP_LOSSLESS', False)
 WEBP_QUALITY = env.str('WEBP_QUALITY', '100' if WEBP_LOSSLESS else '60')
@@ -96,7 +100,7 @@ _parser.add_argument('--force', action='store_true', help='Deletes matching medi
 a_group = _parser.add_argument_group('Audio')
 a_group.add_argument('--no-watch-audio', action='store_false', dest='watch_audio', help='Do not watch for audio files', default=WATCH_AUDIO)
 a_group.add_argument('--no-delete-audio', action='store_true', dest='keep_audio', help='Do not delete audio (used with --delete-media)', default=DELETE_AUDIO)
-a_group.add_argument('--audio-format', type=file_extension, action='append', dest='audio_convert_formats', metavar='extension', help='Extra audio formats to watch for', default=_AUDIO_CONVERT_FORMATS)
+a_group.add_argument('--audio-format', type=file_extension, action='append', dest='audio_convert_formats', metavar='extension', help='Extra audio formats to watch for', default=AUDIO_CONVERT_FORMATS)
 a_group.add_argument('--audio-bitrate', type=str, action='store', dest='audio_bitrate', metavar='bitrate', help='Target bitrate to convert audio to', default=AUDIO_BITRATE)
 
 
@@ -104,7 +108,7 @@ a_group.add_argument('--audio-bitrate', type=str, action='store', dest='audio_bi
 i_group = _parser.add_argument_group('Images')
 i_group.add_argument('--no-watch-images', action='store_false', help='Do not watch for image files', default=WATCH_IMAGES)
 i_group.add_argument('--no-delete-images', action='store_true', dest='keep_images', help='Do not delete images (used with --delete-media)', default=DELETE_IMAGES)
-i_group.add_argument('--image-format', type=file_extension, action='append', dest='image_convert_formats',metavar='extension', help='Extra image formats to watch for', default=_IMAGE_CONVERT_FORMATS)
+i_group.add_argument('--image-format', type=file_extension, action='append', dest='image_convert_formats',metavar='extension', help='Extra image formats to watch for', default=IMAGE_CONVERT_FORMATS)
 i_group.add_argument('--webp-command', type=str, nargs='?', metavar='executable_path', help='command to run for ImageMagick', default=WEBP_COMMAND)
 i_group.add_argument('--webp-quality', type=quality, action='store', metavar='percent', help='conversion quality for libwebp: 1 (worst) to 100 (lossless)', default=WEBP_QUALITY)
 i_group.add_argument('--webp-lossless', action='store_true', help='Use lossless conversion when converting to webp', default=WEBP_LOSSLESS)
