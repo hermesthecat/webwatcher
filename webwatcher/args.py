@@ -58,6 +58,7 @@ DELETE_MEDIA = env.bool('DELETE_MEDIA', True)
 WATCH_AUDIO = env.bool('WATCH_AUDIO', True)
 DELETE_AUDIO = env.bool('DELETE_AUDIO', True)
 _AUDIO_CONVERT_FORMATS = ['.mp3', '.aac', '.flac', '.wav', '.wma', '.aac', '.m4a', '.ogg']
+AUDIO_BITRATE = env.str('AUDIO_BITRATE', None)
 
 # Image conversion settings
 WATCH_IMAGES = env.bool('WATCH_IMAGES', True)
@@ -96,6 +97,7 @@ a_group = _parser.add_argument_group('Audio')
 a_group.add_argument('--no-watch-audio', action='store_false', dest='watch_audio', help='Do not watch for audio files', default=WATCH_AUDIO)
 a_group.add_argument('--no-delete-audio', action='store_true', dest='keep_audio', help='Do not delete audio (used with --delete-media)', default=DELETE_AUDIO)
 a_group.add_argument('--audio-format', type=file_extension, action='append', dest='audio_convert_formats', metavar='extension', help='Extra audio formats to watch for', default=_AUDIO_CONVERT_FORMATS)
+a_group.add_argument('--audio-bitrate', type=str, action='store', dest='audio_bitrate', metavar='bitrate', help='Target bitrate to convert audio to', default=AUDIO_BITRATE)
 
 
 # Image args

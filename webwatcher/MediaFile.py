@@ -99,8 +99,12 @@ class MediaFile:
         if self.is_media:
             if self.dest.exists() or config.force:
                 if copy:
-                    self.copy_to_source(move=True)
-                self.delete_file()
+                    try:
+                        self.copy_to_source(move=True)
+                        self.delete_file()
+                    except PermissionError:
+                        logger.warn('Unable to copy source file.')
+
         elif config.all:
             if self.path.suffix not in ['.webm', '.webp']:
                 if copy:
@@ -125,11 +129,20 @@ class MediaFile:
             logger.info(' '.join(['AUDIO: ', *short_args]))
             if not config.dry_run:
                 try:
-                    (ffmpeg
-                        .input(f'{self.path.resolve()}')
-                        .output(f'{self.dest.resolve()}', map='0:a', format='webm',acodec='libopus', quality=100)
-                        .run(capture_stdout=True, capture_stderr=True)
-                    )
+                    if config.audio_bitrate:
+                        logger.info('Using custom audio bitrate')
+                        (ffmpeg
+                         .input(f'{self.path.resolve()}')
+                         .output(f'{self.dest.resolve()}', map='0:a', format='webm', acodec='libopus', audio_bitrate=config.audio_bitrate)
+                         .run(capture_stdout=True, capture_stderr=True)
+                         )
+                    else:
+                        logger.info('NOT using custom audio bitrate')
+                        (ffmpeg
+                            .input(f'{self.path.resolve()}')
+                            .output(f'{self.dest.resolve()}', map='0:a', format='webm',acodec='libopus', quality=100)
+                            .run(capture_stdout=True, capture_stderr=True)
+                        )
                     self.converted = True
                     return True
                 except ffmpeg.Error as e:
