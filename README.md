@@ -92,6 +92,5 @@ Some CLI args are inverse of the environment variable, because the default behav
 
 
 # Planned Changes
-- Upload to PyPi
 - More conversion options
 
